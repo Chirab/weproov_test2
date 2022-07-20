@@ -2,6 +2,7 @@ package images
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"weproov/internal/helper"
@@ -18,11 +19,11 @@ type ImagesRoutes struct {
 }
 
 type image struct {
-	imagekeyName string
+	ImagekeyName string
 }
 
 type getImageResponse struct {
-	imageUrl string
+	ImageUrl string
 
 }
 
@@ -55,8 +56,9 @@ func (i *ImagesRoutes) createNewImageHandler(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
+	fmt.Println(keyName)
 	resp := &image{
-		imagekeyName : keyName,
+		ImagekeyName : keyName,
 	}
 
 	json.NewEncoder(w).Encode(resp)
@@ -71,32 +73,31 @@ func (i *ImagesRoutes) deleteImageHandler(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	err = i.imgs.DeleteImage(imgResponse.imagekeyName)
+	err = i.imgs.DeleteImage(imgResponse.ImagekeyName)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	w.WriteHeader(201)
+	w.WriteHeader(200)
 
 }
 
 func (i *ImagesRoutes) getImageHandler(w http.ResponseWriter, r *http.Request) {
-	imgResponse := new(image)
-	err := helper.ParseIncomingInput(w, r, imgResponse)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+	imageName := r.URL.Query().Get("name")
+	if len(imageName) == 0 {
+		http.Error(w, "empty string", http.StatusBadRequest)
 		return
 	}
 
-	imageUrl, err := i.imgs.GetImageByKey(imgResponse.imagekeyName)
+	imageUrl, err := i.imgs.GetImageByKey(imageName)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	resp := &getImageResponse{
-		imageUrl : imageUrl,
+		ImageUrl : imageUrl,
 	}
 	json.NewEncoder(w).Encode(resp)
 }

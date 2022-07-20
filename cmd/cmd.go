@@ -38,14 +38,9 @@ func (s *Server) Execute() {
 	logger := log.New(os.Stdout, "http: ", log.LstdFlags)
 	s.Router = mux.NewRouter()
 
-	imgS := images.NewImagesServices()
-
-	imgR := images.NewImagesRoutes(s.Router, imgS)
-	imgR.Routes()
-
-
-
-
+	imgServices := images.NewImagesServices()
+	imgRoutes := images.NewImagesRoutes(s.Router, imgServices)
+	imgRoutes.Routes()
 
 	srv := s.InitServer()
 	done := make(chan bool)

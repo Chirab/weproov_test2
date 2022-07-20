@@ -1,7 +1,6 @@
 package aws
 
 import (
-	"fmt"
 	"log"
 	"os"
 
@@ -32,8 +31,6 @@ func init() {
 }
 
 func ConnectS3() *s3.S3 {
-	fmt.Println(secretKey)
-	fmt.Println(accessKey)
 	return s3.New(session.Must(session.NewSession(&aws.Config{
 		Region:      aws.String(region),
 		Credentials: credentials.NewStaticCredentials(accessKey, secretKey, ""),
