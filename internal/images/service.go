@@ -20,7 +20,7 @@ func NewImagesServices() *ImageServices {
 func (i *ImageServices) CreateImage(filename, headerContentTtype string, file multipart.File,) (string, error) {
 	keyName := autoname.Generate("")
 	option := &s3.PutObjectInput{
-			Bucket: aws.String("weproov"),
+			Bucket: aws.String("weproov1"),
 			Key:    aws.String(keyName),
 			Body:   file,
 	}
@@ -37,7 +37,7 @@ func (i *ImageServices) CreateImage(filename, headerContentTtype string, file mu
 func (i *ImageServices) GetImageByKey(keyName string) (string,error) {
 	respS3 := pkgAws.ConnectS3()
 	req, _ := respS3.GetObjectRequest(&s3.GetObjectInput{
-			Bucket: aws.String("weproov"),
+			Bucket: aws.String("weproov1"),
 			Key:    aws.String(keyName),
 	})
 
@@ -52,7 +52,7 @@ func (i *ImageServices) GetImageByKey(keyName string) (string,error) {
 func (i *ImageServices) DeleteImage(keyName string) error {
 	respS3 := pkgAws.ConnectS3()
 	_, err := respS3.DeleteObject(&s3.DeleteObjectInput{
-		Bucket: aws.String("weproov"),
+		Bucket: aws.String("weproov1"),
 		Key:    aws.String(keyName),
 	})
 	if err != nil {		
